@@ -1,0 +1,240 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, shrink-to-fit=no">
+  <title>Reconhecimento Facial</title>
+  <style>
+    body {
+      font-family: Verdana, Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      color: #ffffff;
+      margin: 5px;
+      background: #d0d0d0;
+      min-width: 400px;
+      max-width: 700px;
+    }
+    h1 {
+      font-size: 22px;
+      text-align: left;
+      text-shadow: 2px 2px 2px black;
+      color: #ffffff;
+      background: #909090;
+      border: #909090 solid 2px;
+      border-radius: 7px 7px 0px 0px;
+      padding: 4px;
+      margin: 0px;
+    }
+    h2 {
+      font-size: 14px;
+    }
+    h3 {
+      font-size: 12px;
+      text-align: left;
+      font-weight: normal;
+      background: #ffffff;
+      padding: 5px;
+      margin: 0px;
+      border: #909090 solid 2px;
+    }
+    h4 {
+      font-size: 10px;
+      text-align: center;
+      color: #ffffff;
+      background: #909090;
+      padding: 4px 8px 4px 8px;
+      margin: 0px;
+      border: #909090 solid 2px;
+      border-radius: 0px 0px 7px 7px;
+    }
+    table {
+      width: 100%;
+    }
+    th {
+      font-size: 11px;
+      background: rgb(65, 77, 70);
+      padding: 5px;
+      border-radius: 3px 0px 0px 3px;
+    }
+    td {
+      text-align: center;
+      font-size: 11px;
+      background: #55575c;
+      padding: 5px;
+      border-radius: 0px 3px 3px 0px;
+    }
+    img {
+      margin: 5px 15px;
+      vertical-align: middle;
+    }
+    input {
+      width: 100%;
+      border-radius: 4px;
+    }
+    input:focus {
+      box-shadow: 1px 1px 4px rgb(9, 56, 97);
+    }
+    button {
+      background: #e0e0e0;
+      border: 2px solid #000000;
+      border-radius: 5px;
+      margin: 5px;
+      padding: 5px;
+      width: 120px;
+    }
+    button:hover {
+      background: #c0c0ff;
+    }
+    button:focus {
+      box-shadow: 0px 0px 5px #e0e0e0;
+    }
+    button:active {
+      background: rgb(227, 0, 14);
+    }
+    button:disabled {
+       cursor: default;
+       background: #a0a0a0;
+    }
+    #status-display {
+      height: 25px;
+      border: none;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      color: #3cff00;
+      background: rgb(0, 0, 0);
+      text-align: center;
+    }
+    #stream {
+      margin: 20px;
+      box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.7);
+      border-radius: 10px;
+    }
+    .delete {
+      background: rgb(227, 0, 14);
+      border-radius: 100px;
+      color: #ffffff;
+      text-align: center;
+      line-height: 18px;
+      cursor: pointer;
+    }
+  </style>
+  <script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+      var baseHost = document.location.origin;
+      var streamUrl = baseHost + ":81";
+      const WS_URL = "ws://" + window.location.host + ":82";
+      const ws = new WebSocket(WS_URL);
+
+      const view = document.getElementById("stream");
+      const personFormField = document.getElementById("person");
+      const streamButton = document.getElementById("button-stream");
+      const detectButton = document.getElementById("button-detect");
+      const captureButton = document.getElementById("button-capture");
+      const recogniseButton = document.getElementById("button-recognise");
+      const deleteAllButton = document.getElementById("delete_all");
+
+      ws.onopen = () => {
+        console.log(`Connected to ${WS_URL}`);
+      };
+      ws.onmessage = message => {
+        if (typeof message.data === "string") {
+          if (message.data.substr(0, 8) == "listface") {
+            addFaceToScreen(message.data.substr(9));
+          } else if (message.data == "delete_faces") {
+            deleteAllFacesFromScreen();
+          } else {
+              document.getElementById("current-status").innerHTML = message.data;
+              document.getElementById("status-display").style.background = "rgb(170, 236, 83)";
+          }
+        }
+        if (message.data instanceof Blob) {
+          var urlObject = URL.createObjectURL(message.data);
+          view.src = urlObject;
+        }
+      }
+
+      streamButton.onclick = () => {
+        ws.send("stream");
+      };
+      detectButton.onclick = () => {
+        ws.send("detect");
+      };
+      captureButton.onclick = () => {
+        person_name = document.getElementById("person").value;
+        ws.send("capture:" + person_name);
+      };
+      recogniseButton.onclick = () => {
+        ws.send("recognise");
+      };
+      deleteAllButton.onclick = () => {
+        ws.send("delete_all");
+      };
+      personFormField.onkeyup = () => {
+        captureButton.disabled = false;
+      };
+
+      function deleteAllFacesFromScreen() {
+        const faceList = document.querySelector("ul");
+        while (faceList.firstChild) {
+          faceList.firstChild.remove();
+        }
+        personFormField.value = "";
+        captureButton.disabled = true;
+      }
+
+      function addFaceToScreen(person_name) {
+        const faceList = document.querySelector("ul");
+        let listItem = document.createElement("li");
+        let closeItem = document.createElement("span");
+        closeItem.classList.add("delete");
+        closeItem.id = person_name;
+        closeItem.addEventListener("click", function() {
+          ws.send("remove:" + person_name);
+        });
+        listItem.appendChild(
+          document.createElement("strong")
+        ).textContent = person_name + " ";
+        listItem.appendChild(closeItem).textContent = "X";
+        faceList.appendChild(listItem);
+      }
+
+      captureButton.disabled = true;
+    });
+  </script>
+</head>
+<body>
+  <h1>
+    <a href="https://github.com/mferraz56" target="_blank"><img src="https://avatars.githubusercontent.com/u/34348884?v=4" title="ESP32" width="70" height="70"></a>
+    Reconhecimento Facial com ESP32
+  </h1>
+  <h3>
+  <table>
+    <tr>
+      <th rowspan="2">
+        <img id="stream" src="" width="320" height="240">
+        <div id="status-display"> <span id="current-status">Status</span> </div>
+      </th>
+      <td>
+        <input id="person" type="text" value="" placeholder="Informe o nome do Usuário aqui"><br><br>
+        <button id="button-stream">Ao Vivo</button>
+        <button id="button-detect">Detectar Faces</button><br>
+        <button id="button-capture" class="left" title="Informe um nome no campo acima antes de capturar a face">Adicionar Usuário</button>
+        <button id="button-recognise" class="right">Reconhecer</button>
+        <button id="button-Flash" class="left">Flash</button>
+        <div id="status-display"> <span id="current-status">Status</span> </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <h2>Usuários Cadastrados</h2>
+        <ul>
+        </ul>
+        <button id="delete_all">Apagar Todos</button>
+      </td>
+    </tr>
+  </table>
+  </h3>
+  <h4>Reconhecimento Facial com ESP32 - Murilo Ferraz - RA: 5142295</h4>
+</body>
+</html>

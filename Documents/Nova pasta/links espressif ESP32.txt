@@ -1,0 +1,15 @@
+https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/partition-tables.html
+
+
+https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/kconfig.html#partition-table
+
+
+https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/kconfig.html#config-partition-table-custom-filename
+
+
+https://www.dobitaobyte.com.br/face-detection-e-face-recognition-com-esp32-cam/
+
+https://teachablemachine.withgoogle.com/
+
+
+https://www.youtube.com/watch?v=MGPL10N9YmM&ab_channel=InterneteCoisas
