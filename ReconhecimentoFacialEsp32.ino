@@ -1,14 +1,3 @@
-/*******************************************************************************
- * CANAL INTERNET E COISAS                                                     *
- * ESP32-CAM                                                                   *
- * Controle de Acesso com Reconhecimento Facial e integração ao Jarvis         *
- * Baseado no Projeto de Andrew McCabe, uso autorizado                         *
- * https://robotzero.one/access-control-with-face-recognition/                 *
- * 04/2020 - Andre Michelon                                                    *
- * andremichelon@internetecoisas.com.br                                        *
- * https://internetecoisas.com.br                                              *
- ******************************************************************************/
-
 // Bibliotecas ------------------------------------------
 #include <ArduinoWebsockets.h>
 #include <SPIFFS.h>
@@ -22,7 +11,7 @@
 #include "fr_flash.h"
 
 // Definições -------------------------------------------
-#define ENROLL_CONFIRM_TIMES  5
+#define ENROLL_CONFIRM_TIMES  10
 #define FACE_ID_SAVE_NUMBER   7
 #define MIN_DETECT_INTERVAL   5000
 
@@ -89,11 +78,11 @@ typedef struct {
 } httpd_resp_value;
 
 // Wi-Fi ------------------------------------------------
-const char*           SSID                    = "home2.4";
-const char*           PASSWORD                = "Home31415";
+const char*           SSID                    = "CAMILO";
+const char*           PASSWORD                = "CAMILO10";
 
 // API JARVIS -------------------------------------------
-const String          JARVIS_API              = "http://192.168.0.31";
+//const String          JARVIS_API              = "http://192.168.0.31";
 
 // Variáveis globais ------------------------------------
 camera_fb_t           *fb                     = NULL;
@@ -264,11 +253,11 @@ void setup() {
   app_facenet_main();
   socket_server.listen(82);
 
-  httpClient.begin(JARVIS_API + "/?acessook&ninguem");
-  if (httpClient.GET() != HTTP_CODE_OK) {
-    Serial.println("API Jarvis indisponível.");
-    while(true);
-  }
+  //httpClient.begin(JARVIS_API + "/?acessook&ninguem");
+//  if (httpClient.GET() != HTTP_CODE_OK) {
+//    Serial.println("API Jarvis indisponível.");
+//    while(true);
+//  }
   httpClient.end();
 
   Serial.print("Câmera pronta, acesse http://");
@@ -322,13 +311,13 @@ void loop() {
             if (f) {
               String s = f->id_name;
               Serial.println("Reconhecido: " + s);
-              httpClient.begin(JARVIS_API + "/?acessook&" + s);
+//              httpClient.begin(JARVIS_API + "/?acessook&" + s);
               Serial.println(httpClient.GET() == HTTP_CODE_OK ? "Notificação enviada" : "Falha na notificação");
               httpClient.end();
               client.send("Usuário identificado: " + s);
             } else {
               Serial.println("Não reconhecido");
-              httpClient.begin(JARVIS_API + "/?acessonok");
+//              httpClient.begin(JARVIS_API + "/?acessonok");
               Serial.println(httpClient.GET() == HTTP_CODE_OK ? "Notificação enviada" : "Falha na notificação");
               httpClient.end();
               client.send("Usuário não identificado");
