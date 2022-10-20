@@ -185,6 +185,14 @@ void handle_message(WebsocketsClient &client, WebsocketsMessage msg) {
     delete_face_id_in_flash_with_name(&st_face_list, person);
     send_face_list(client);
   }
+  if (msg.data() == "Flash") {
+    Serial.println("entra flash");
+    if(digitalRead(4)==LOW){
+      digitalWrite(4,HIGH);
+    } else{
+      digitalWrite(4,LOW);
+      }
+  }
   if (msg.data() == "delete_all") {
     delete_all_faces(client);
   }
@@ -194,7 +202,8 @@ void handle_message(WebsocketsClient &client, WebsocketsMessage msg) {
 void setup() {
   Serial.begin(115200);
   Serial.println();
-
+  pinMode(4,OUTPUT);
+  
   if (!SPIFFS.begin()) {
     Serial.println("SPIFFS - Falha");
     while(true);
@@ -314,7 +323,9 @@ void loop() {
 //              httpClient.begin(JARVIS_API + "/?acessook&" + s);
               Serial.println(httpClient.GET() == HTTP_CODE_OK ? "Notificação enviada" : "Falha na notificação");
               httpClient.end();
-              client.send("Usuário identificado: " + s);
+//              client.send("Usuário identificado: " + s);
+              client.send("Reconhecido");
+              client.send("Ultimo Usuário: " + s);
             } else {
               Serial.println("Não reconhecido");
 //              httpClient.begin(JARVIS_API + "/?acessonok");

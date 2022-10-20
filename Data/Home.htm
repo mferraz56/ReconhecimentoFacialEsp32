@@ -101,7 +101,18 @@
       font-size: 16px;
       margin-bottom: 10px;
       border-radius: 5px;
-      color: #3cff00;
+      color: #25471a;
+      background: rgb(0, 0, 0);
+      text-align: center;
+    }
+    #UltimoRec {
+      height: 25px;
+      border: none;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      color: #25471a;
       background: rgb(0, 0, 0);
       text-align: center;
     }
@@ -132,6 +143,7 @@
       const detectButton = document.getElementById("button-detect");
       const captureButton = document.getElementById("button-capture");
       const recogniseButton = document.getElementById("button-recognise");
+      const flashButton = document.getElementById("button-Flash");
       const deleteAllButton = document.getElementById("delete_all");
 
       ws.onopen = () => {
@@ -145,7 +157,11 @@
             deleteAllFacesFromScreen();
           } else {
               document.getElementById("current-status").innerHTML = message.data;
-              document.getElementById("status-display").style.background = "rgb(170, 236, 83)";
+              
+              if(message.data.includes('Ultimo')){
+                document.getElementById("UltimoReconhecido").innerHTML = message.data;
+              }
+             // document.getElementById("status-display").style.background = "rgb(170, 236, 83)";
           }
         }
         if (message.data instanceof Blob) {
@@ -166,6 +182,9 @@
       };
       recogniseButton.onclick = () => {
         ws.send("recognise");
+      };
+      flashButton.onclick = () => {
+        ws.send("Flash");
       };
       deleteAllButton.onclick = () => {
         ws.send("delete_all");
@@ -222,7 +241,7 @@
         <button id="button-capture" class="left" title="Informe um nome no campo acima antes de capturar a face">Adicionar Usuário</button>
         <button id="button-recognise" class="right">Reconhecer</button>
         <button id="button-Flash" class="left">Flash</button>
-        <div id="status-display"> <span id="current-status">Status</span> </div>
+        <div id="UltimoRec"> <span id="UltimoReconhecido">Ultimo Reconhecido</span> </div>
       </td>
     </tr>
     <tr>
