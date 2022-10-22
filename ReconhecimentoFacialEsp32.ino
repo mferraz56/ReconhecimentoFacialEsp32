@@ -78,8 +78,8 @@ typedef struct {
 } httpd_resp_value;
 
 // Wi-Fi ------------------------------------------------
-const char*           SSID                    = "CAMILO";
-const char*           PASSWORD                = "CAMILO10";
+const char*           SSID                    = "ESP32";
+const char*           PASSWORD                = "RECONHECIMENTO";
 
 // API JARVIS -------------------------------------------
 //const String          JARVIS_API              = "http://192.168.0.31";
