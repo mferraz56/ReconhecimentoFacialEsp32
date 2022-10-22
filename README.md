@@ -14,5 +14,8 @@ o projeto foi dividido em etapas para a realizacao das quais foram
 - [x] Adaptacao arquivo de particao de da memoria FLASH do esp32
 - [x] Aquisição de componentes.             
 - - [x] ESPCAM
-- -  Antena de amplificacao de sinal para o esp.
-- [x]
+- - [x] Antena de amplificacao de sinal para o esp.
+- [x] Adaptacao codigo ESPCAM para o reconhecimento facial
+- [x] Adaptacao codigo ESP32
+- - [x] exportar nome da rede e senha.
+- - [x] exportar dispositivos conectados. 
