@@ -8,3 +8,11 @@ Tal projeto tem o intuito de agregar conhecimentos multidisciplinares para a apr
 
 
 o projeto foi dividido em etapas para a realizacao das quais foram
+### Andamento
+- [x] Pesquisa de projetos semelhantes para o embasamento. 
+- [x] Adaptacao do codigo para a realizacao da gravacao no ESPCAM
+- [x] Adaptacao arquivo de particao de da memoria FLASH do esp32
+- [x] Aquisição de componentes.             
+- - [x] ESPCAM
+- -  Antena de amplificacao de sinal para o esp.
+- [x]
