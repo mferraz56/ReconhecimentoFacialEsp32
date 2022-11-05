@@ -1,0 +1,10 @@
+Boards.txt 
+-- para criar a partição na ide do arduino
+
+C:\Users\muril\AppData\Local\Arduino15\packages\esp32\hardware\esp32\1.0.6
+
+
+
+partitions 
+-- para criar ou editar tamanho de partiçoes
+C:\Users\muril\AppData\Local\Arduino15\packages\esp32\hardware\esp32\1.0.6\tools\partitions

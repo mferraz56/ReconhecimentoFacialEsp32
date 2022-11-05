@@ -83,6 +83,7 @@ const char*           PASSWORD                = "RECONHECIMENTO";
 
 // API JARVIS -------------------------------------------
 //const String          JARVIS_API              = "http://192.168.0.31";
+const String            ligamotor            = "http://192.168.4.1";
 
 // Variáveis globais ------------------------------------
 camera_fb_t           *fb                     = NULL;
@@ -190,7 +191,10 @@ void handle_message(WebsocketsClient &client, WebsocketsMessage msg) {
     if(digitalRead(4)==LOW){
       digitalWrite(4,HIGH);
     } else{
-      digitalWrite(4,LOW);
+        digitalWrite(4,LOW);
+        httpClient.begin(ligamotor + "/L");
+        Serial.println(httpClient.GET() == HTTP_CODE_OK ? "Notificação enviada" : "Falha na notificação");
+        httpClient.end();
       }
   }
   if (msg.data() == "delete_all") {
@@ -321,11 +325,14 @@ void loop() {
               String s = f->id_name;
               Serial.println("Reconhecido: " + s);
 //              httpClient.begin(JARVIS_API + "/?acessook&" + s);
+//              Serial.println(httpClient.GET() == HTTP_CODE_OK ? "Notificação enviada" : "Falha na notificação");
+              httpClient.begin(ligamotor + "/H");
               Serial.println(httpClient.GET() == HTTP_CODE_OK ? "Notificação enviada" : "Falha na notificação");
               httpClient.end();
 //              client.send("Usuário identificado: " + s);
               client.send("Reconhecido");
               client.send("Ultimo Usuário: " + s);
+              
             } else {
               Serial.println("Não reconhecido");
 //              httpClient.begin(JARVIS_API + "/?acessonok");
